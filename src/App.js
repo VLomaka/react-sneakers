@@ -1,6 +1,12 @@
 import Header from './components/Header'
 import Drawer from './components/Drawer'
 import Card from './components/Card'
+const arr = [
+  { title: 'Чоловічі Кросівки Nike Blazer Mid Suede', price: 12999, imageUrl: "/react-sneakers/img/1sneakers.jpg" },
+  { title: 'Чоловічі Кросівки Nike Air Max 270', price: 12999, imageUrl: "/react-sneakers/img/2sneakers.jpg" },
+  { title: 'Чоловічі Кросівки Nike Blazer Mid Suede', price: 8500, imageUrl: "/react-sneakers/img/3sneakers.jpg" },
+  { title: 'Кросівки Puma X Aka Boku Future Rider', price: 8999, imageUrl: "/react-sneakers/img/4sneakers.jpg" },
+];
 
 function App() {
   return (
@@ -14,13 +20,18 @@ function App() {
             <img width={14} src="/react-sneakers/img/search.svg" alt="search" />
             <input placeholder="Пошук..." />
           </div>
-
         </div>
+
         <div className="d-flex">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+
+
+          {arr.map((obj) => (
+            <Card
+              title={obj.title}
+              price={obj.price}
+              imageUrl={obj.imageUrl} />
+          ))}
+
         </div>
       </div>
     </div>
