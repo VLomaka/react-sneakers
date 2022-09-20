@@ -1,39 +1,75 @@
+import React from 'react'
+import axios from 'axios'
 import Header from './components/Header'
 import Drawer from './components/Drawer'
-import Card from './components/Card'
-const arr = [
-  { title: 'Чоловічі Кросівки Nike Blazer Mid Suede', price: 12999, imageUrl: "/react-sneakers/img/1sneakers.jpg" },
-  { title: 'Чоловічі Кросівки Nike Air Max 270', price: 12999, imageUrl: "/react-sneakers/img/2sneakers.jpg" },
-  { title: 'Чоловічі Кросівки Nike Blazer Mid Suede', price: 8500, imageUrl: "/react-sneakers/img/3sneakers.jpg" },
-  { title: 'Кросівки Puma X Aka Boku Future Rider', price: 8999, imageUrl: "/react-sneakers/img/4sneakers.jpg" },
-];
+import Home from './pages/Home'
+import { Route } from 'react-router-dom';
+import Favorites from './pages/Favorites'
+
 
 function App() {
+  const [items, setItems] = React.useState([]);
+  const [favorites, setFavorites] = React.useState([]);
+  const [cartItems, setCartItems] = React.useState([]);
+  const [searchValue, setSearchValue] = React.useState('');
+  const [cartOpened, setCartOpened] = React.useState(false);
+
+  React.useEffect(() => {
+    axios.get('https://6323470d362b0d4e7de06fcd.mockapi.io/items').then(res => {
+      setItems(res.data)
+    })
+    axios.get('https://6323470d362b0d4e7de06fcd.mockapi.io/cart').then(res => {
+      setCartItems(res.data)
+    })
+    axios.get('https://6323470d362b0d4e7de06fcd.mockapi.io/favorites').then(res => {
+      setFavorites(res.data)
+    })
+  }, []);
+
+
+
+  const onAddToCart = (obj) => {
+    axios.post('https://6323470d362b0d4e7de06fcd.mockapi.io/cart', obj)
+    setCartItems((prev) => [...prev, obj])
+  }
+
+  const onRemoveItem = (id) => {
+    axios.delete(`https://6323470d362b0d4e7de06fcd.mockapi.io/cart/${id}`)
+    setCartItems((prev) => prev.filter(item => item.id !== id))
+  }
+
+  const onChangeSearchInput = (event) => {
+    setSearchValue(event.target.value)
+  }
+
+  const onAddToFavorite = (obj) => {
+    console.log(obj, 'obj')
+    axios.post('https://6323470d362b0d4e7de06fcd.mockapi.io/favorites')
+    setFavorites((prev) => [...prev, obj])
+  }
+
+
   return (
     <div className="wrapper clear">
-      <Drawer />
-      <Header />
-      <div className="content p-40">
-        <div className="d-flex align-center justify-between mb-40">
-          <h1>Колекція кросівок</h1>
-          <div className="search-block d-flex">
-            <img width={14} src="/react-sneakers/img/search.svg" alt="search" />
-            <input placeholder="Пошук..." />
-          </div>
-        </div>
+      {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} />}
 
-        <div className="d-flex">
+      <Header onClickCart={() => setCartOpened(true)} />
 
+      <Route path="/" exact>
+        <Home
+          items={items}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          onChangeSearchInput={onChangeSearchInput}
+          onAddToFavorite={onAddToFavorite}
+          onAddToCart={onAddToCart} />
+      </Route>
 
-          {arr.map((obj) => (
-            <Card
-              title={obj.title}
-              price={obj.price}
-              imageUrl={obj.imageUrl} />
-          ))}
+      <Route path='/favorites' exact>
+        <Favorites
+          items={favorites} />
+      </Route>
 
-        </div>
-      </div>
     </div>
 
   );
