@@ -18,4 +18,4 @@ const Info = ({ image, title, description }) => {
   )
 }
 
-export default Info; 
+export default Info;
