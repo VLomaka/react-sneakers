@@ -7,6 +7,7 @@ import AppContext from './context';
 
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
+import Orders from './pages/Orders'
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -16,6 +17,7 @@ function App() {
   const [cartOpened, setCartOpened] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
 
+  
 
   React.useEffect(() => {
     async function fetchData() {
@@ -75,7 +77,7 @@ function App() {
   }
 
   return (
-    <AppContext.Provider value={{ items, cartItems, favorites, isItemAdded, onAddToFavorite, setCartOpened }}>
+    <AppContext.Provider value={{ items, cartItems, favorites, isItemAdded, onAddToFavorite, setCartOpened, setCartItems, onAddToCart,  isLoading}}>
       <div className="wrapper clear">
         {cartOpened && (
           <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} />
@@ -98,6 +100,11 @@ function App() {
 
         <Route path="/favorites" exact>
           <Favorites />
+        </Route>
+        <Route path='/orders' exact>
+          <Orders 
+          
+          />
         </Route>
       </div>
     </AppContext.Provider>
