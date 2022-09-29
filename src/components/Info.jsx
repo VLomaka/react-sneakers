@@ -12,7 +12,7 @@ const Info = ({ image, title, description }) => {
       <p className="opacity-6">{description}</p>
       <button onClick={() => setCartOpened(false)} className="greenButton">
         <img src={image} alt="Arrow" />
-        Вернуться назадdd
+        Вернуться назад
       </button>
     </div>
   )
